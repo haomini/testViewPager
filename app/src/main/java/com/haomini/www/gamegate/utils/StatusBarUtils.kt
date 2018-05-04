@@ -21,15 +21,15 @@ object StatusBarUtils {
      * 设置状态栏
      */
     @TargetApi(Build.VERSION_CODES.M)
-    fun setStatusTheme(window: Window?, dark: Boolean) {
+    fun setStatusTheme(window: Window?, dark: Boolean = true, full: Boolean = true) {
         if (dark) {
-            window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            MIUISetStatusBarLightMode(window, false)
-            FlymeSetStatusBarLightMode(window, false)
-        } else {
-            window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window?.decorView?.systemUiVisibility = (if (full) View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN else 0) or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             MIUISetStatusBarLightMode(window)
             FlymeSetStatusBarLightMode(window)
+        } else {
+            window?.decorView?.systemUiVisibility = (if (full) View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN else 0)
+            MIUISetStatusBarLightMode(window, false)
+            FlymeSetStatusBarLightMode(window, false)
         }
     }
 

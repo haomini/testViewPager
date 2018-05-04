@@ -21,8 +21,8 @@ object StatusBarUtils {
      * 设置状态栏
      */
     @TargetApi(Build.VERSION_CODES.M)
-    fun setStatusTheme(window: Window?, isLight: Boolean) {
-        if (isLight) {
+    fun setStatusTheme(window: Window?, dark: Boolean) {
+        if (dark) {
             window?.decorView?.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             MIUISetStatusBarLightMode(window, false)
             FlymeSetStatusBarLightMode(window, false)

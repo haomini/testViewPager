@@ -1,4 +1,4 @@
-package com.haomini.www.gamegate.spalsh
+package com.haomini.www.gamegate.splash
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -19,7 +19,7 @@ import com.youth.banner.loader.ImageLoader
 import kotlinx.android.synthetic.main.activity_spalsh.*
 
 
-class SpalshActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     val map = mutableMapOf("http://brr.zhibocloud.cn/storage/2018/05/03/0612/1W3JxJLOpor50ljed0mGaXIsQokCjGMvVbBh4DpO/9446e2f678aeb9fd27eb0645cf0f6c5d.png" to false
             , "http://brr.zhibocloud.cn/storage/2018/05/02/1015/fLK7LjKk0tw2E5xBJnIY7EsKgvT9AwvgEfLGW5uL/b7f2c3b1e29086ddb2455346e63bf627.jpeg" to false
@@ -53,7 +53,7 @@ class SpalshActivity : AppCompatActivity() {
         //设置图片加载器
         banner.setImageLoader(object : ImageLoader() {
             override fun displayImage(context: Context?, path: Any?, imageView: ImageView?) {
-                GlideApp.with(this@SpalshActivity)
+                GlideApp.with(this@SplashActivity)
                         .asBitmap()
                         .load(path)
                         .transforms(CenterCrop(), RoundedCorners((4 * applicationContext.resources.displayMetrics.density).toInt()))
@@ -72,11 +72,18 @@ class SpalshActivity : AppCompatActivity() {
             }
 
         })
-        banner.mViewPager.clipToPadding = false
-        banner.mViewPager.pageMargin = (8 * applicationContext.resources.displayMetrics.density).toInt()
-        banner.mViewPager.setPadding((24 * applicationContext.resources.displayMetrics.density).toInt(), 0,
-                (24 * applicationContext.resources.displayMetrics.density).toInt(), 0)
+
+        banner.mViewPager.apply {
+            clipToPadding = false
+            pageMargin = (8 * applicationContext.resources.displayMetrics.density).toInt()
+            setPadding((24 * applicationContext.resources.displayMetrics.density).toInt(), 0,
+                    (24 * applicationContext.resources.displayMetrics.density).toInt(), 0)
+        }
+
         banner.setOnPageChangeListener(adapter)
+        /**
+         * 与window最顶端有一段间隙, 属于viewpager - pageMargin换算后的图片平移系数,
+         */
         banner.setPageTransformer(false) { page, position -> page.scaleY = 1 - 0.1F * Math.abs(position) }
         //设置图片集合
         banner.setImages(map.keys.toList())

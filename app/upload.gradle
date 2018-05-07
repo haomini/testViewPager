@@ -1,0 +1,86 @@
+// pack-upload.gradle
+
+// ָ指定编码
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// 打包源码
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadoc(type: Javadoc) {
+    failOnError  false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+}
+
+// 制作文档(Javadoc)
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+apply plugin: 'maven'
+
+// 对应的仓库地址
+def URL_PUBLIC = "http://localhost:8012/repository/gamegate/"
+def URL_LOCAL = "http://localhost:8012/repository/gamegate/"
+
+// 上传到公共仓库
+task uploadToPublic(type: Upload) {
+    group = 'upload'
+    configuration = configurations.archives
+    uploadDescriptor = true
+    repositories{
+        mavenDeployer {
+            repository(url: URL_PUBLIC) {
+                authentication(userName: USERNAME, password: PASSWORD)
+            }
+            pom.version = VERSION
+            pom.artifactId = ARTIFACT_ID
+            pom.groupId = GROUP_ID
+        }
+    }  
+}
+
+// 上传到本地仓库
+task uploadToLocal(type: Upload) {
+    group = 'upload'
+    configuration = configurations.archives
+    uploadDescriptor = true
+    repositories{
+        mavenDeployer {
+            repository(url: URL_LOCAL) {
+                authentication(userName: USERNAME, password: PASSWORD)
+            }
+            pom.version = VERSION
+            pom.artifactId = ARTIFACT_ID
+            pom.groupId = GROUP_ID
+        }
+    }  
+}
+
+// 压缩生成归档文档
+task pack(type: Zip) {
+    group = 'pack'
+    archiveName = rootProject.getRootDir().getName() + "_v" + VERSION + ".zip"
+    destinationDir = rootProject.getRootDir().getParentFile()
+    from rootProject.getRootDir().getAbsolutePath()
+    exclude '**.zip'
+    exclude '**.iml'
+    exclude '**/**.iml'
+    exclude 'build/**'
+    exclude '.idea/**'
+    exclude '.gradle/**'
+    exclude 'gradle/**'
+    exclude '**/build/**'
+}

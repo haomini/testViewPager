@@ -41,3 +41,15 @@ dependencies {
     }
     kapt 'com.github.bumptech.glide:compiler:4.7.1'
 }
+
+// 配置上传信息
+ext {
+    USERNAME = "haomini"
+    PASSWORD = "1231231231"
+    GROUP_ID = "com.haomini.gamegate"
+    ARTIFACT_ID = "gamegate"
+    VERSION = "1.0.2"
+}
+
+// 引用上传脚本
+apply from: "/upload.gradle"
